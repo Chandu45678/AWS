@@ -12,3 +12,72 @@
 </body>
 
 </html>
+//week-3 efs commands STEP 1: Go to EC2 → EFS-1
+ssh -i yourkey.pem ec2-user@Public-IP
+sudo su 
+mkdir efs
+yum install -y amazon-efs-utils
+NOW Paste the Copied Mount Command
+sudo mount -t efs -o tls fs-05960028da3738792:/ efs
+Press Enter.
+df -h
+cd /home/ec2-user/efs
+touch nani.txt
+ls
+Connect to EFS-2
+
+Click:
+
+👉 Connect
+👉 EC2 Instance Connect
+👉 Click Connect
+
+Terminal will open.
+
+🟢 STEP 3: Become Root
+
+Type:
+
+sudo su
+🟢 STEP 4: Create Mount Folder
+
+Very important:
+
+mkdir -p /home/ec2-user/efs
+
+(We use same path as EFS-1)
+
+🟢 STEP 5: Install EFS Utils
+yum install -y amazon-efs-utils
+
+Wait until complete.
+
+🟢 STEP 6: Mount EFS
+
+Run:
+
+sudo mount -t efs -o tls fs-05960028da3738792:/ /home/ec2-user/efs
+
+Press Enter.
+
+If no error → success.
+
+🟢 STEP 7: Verify Mount
+df -h
+
+You should see:
+
+127.0.0.1:/  ...  /home/ec2-user/efs
+🟢 STEP 8: TEST SHARING
+
+Now check:
+
+cd /home/ec2-user/efs
+ls
+
+You should see:
+
+nani.txt
+
+
+If no error appears ✅ it means mounted successfully.
