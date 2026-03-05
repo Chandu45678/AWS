@@ -12,73 +12,354 @@
 </body>
 
 </html>
-//week-3 efs commands STEP 1: Go to EC2 → EFS-1
-ssh -i yourkey.pem ec2-user@Public-IP
-sudo su 
-mkdir efs
-yum install -y amazon-efs-utils
-NOW Paste the Copied Mount Command
-sudo mount -t efs -o tls fs-05960028da3738792:/ efs
-Press Enter.
-df -h
-cd /home/ec2-user/efs
-touch nani.txt
-ls
-Connect to EFS-2
-
-Click:
-
-👉 Connect
-👉 EC2 Instance Connect
-👉 Click Connect
-
-Terminal will open.
-
-🟢 STEP 3: Become Root
-
-Type:
-
-sudo su
-🟢 STEP 4: Create Mount Folder
-
-Very important:
-
-mkdir -p /home/ec2-user/efs
-
-(We use same path as EFS-1)
-
-🟢 STEP 5: Install EFS Utils
-yum install -y amazon-efs-utils
-
-Wait until complete.
-
-🟢 STEP 6: Mount EFS
-
-Run:
-
-sudo mount -t efs -o tls fs-05960028da3738792:/ /home/ec2-user/efs
-
-Press Enter.
-
-If no error → success.
-
-🟢 STEP 7: Verify Mount
-df -h
-
-You should see:
-
-127.0.0.1:/  ...  /home/ec2-user/efs
-🟢 STEP 8: TEST SHARING
-
-Now check:
-
-cd /home/ec2-user/efs
-ls
-
-You should see:
-
-nani.txt
 
 
-If no error appears ✅ it means mounted successfully.
-.
+import java.util.*;
+
+public class Program8 {
+
+    public static boolean canFormPalindrome(String s) {
+
+        int bitVector = 0;
+
+        for (char c : s.toCharArray()) {
+
+            // Ignore non-letter characters
+            if (Character.isLetter(c)) {
+
+                // Convert to lowercase
+                c = Character.toLowerCase(c);
+
+                int bitIndex = c - 'a';
+                bitVector ^= (1 << bitIndex);
+            }
+        }
+
+        // Check if at most one bit is set
+        return (bitVector == 0) || ((bitVector & (bitVector - 1)) == 0);
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        String input = sc.nextLine();
+
+        System.out.println(canFormPalindrome(input));
+
+        sc.close();
+    }
+}
+
+
+
+                //p2
+                    
+*/
+import java.util.*;
+
+public class Program2 
+{
+
+    public static int shortestSubarray(int[] A, int K) {
+        int n = A.length;
+        long[] prefix = new long[n + 1];
+
+        // Build prefix sum
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + A[i];
+        }
+
+        Deque<Integer> dq = new ArrayDeque<>();
+        int minLength = Integer.MAX_VALUE;
+
+        for (int i = 0; i <= n; i++) {
+
+            // Check if current prefix - smallest prefix >= K
+            while (!dq.isEmpty() && prefix[i] - prefix[dq.peekFirst()] >= K) {
+                minLength = Math.min(minLength, i - dq.pollFirst());
+            }
+
+            // Maintain increasing order in deque
+            while (!dq.isEmpty() && prefix[i] <= prefix[dq.peekLast()]) {
+                dq.pollLast();
+            }
+
+            dq.offerLast(i);
+        }
+
+        return minLength == Integer.MAX_VALUE ? -1 : minLength;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int[] A = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            A[i] = sc.nextInt();
+        }
+
+        int K = sc.nextInt();
+
+        System.out.println(shortestSubarray(A, K));
+        sc.close();
+    }
+}
+
+
+                              //p1
+            
+
+import java.util.*;
+
+public class Program1
+ {
+
+    // Function to count subarrays with exactly K distinct integers
+    public static int subarraysWithKDistinct(int[] A, int K) {
+        return atMostK(A, K) - atMostK(A, K - 1);
+    }
+
+    // Helper function to count subarrays with at most K distinct integers
+    private static int atMostK(int[] A, int K) {
+        int left = 0;
+        int result = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int right = 0; right < A.length; right++) {
+            map.put(A[right], map.getOrDefault(A[right], 0) + 1);
+
+            while (map.size() > K) {
+                map.put(A[left], map.get(A[left]) - 1);
+                if (map.get(A[left]) == 0) {
+                    map.remove(A[left]);
+                }
+                left++;
+            }
+
+            result += (right - left + 1);
+        }
+
+        return result;
+    }
+
+    // Main method - Reading from Keyboard
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+       // System.out.print("Enter size of array: ");
+        int n = sc.nextInt();
+
+        int[] A = new int[n];
+
+       // System.out.println("Enter array elements:");
+        for (int i = 0; i < n; i++) {
+            A[i] = sc.nextInt();
+        }
+
+        //System.out.print("Enter value of K: ");
+        int K = sc.nextInt();
+
+        int result = subarraysWithKDistinct(A, K);
+        System.out.println(result);
+
+        sc.close();
+    }
+}
+
+
+
+
+            //p3
+            
+
+import java.util.*; 
+class NumArray
+ {
+     int[] nums;
+        int[] BIT;
+        int n;
+        public NumArray(int[] nums)
+         {
+             this.nums = nums;
+            n = nums.length;
+            BIT = new int[n + 1]; 
+            for (int i = 0; i < n; i++) 
+            init(i, nums[i]);
+
+        }
+        public void init(int i, int val) 
+        {
+             i++;
+            while (i <= n) 
+            {
+                 BIT[i] += val; 
+                 i += (i & -i);
+            }
+        }
+        public int getSum(int i) 
+        {
+             int sum = 0;
+                i++;
+            while (i > 0)
+             {
+                 sum += BIT[i];
+                  i -= (i & -i);
+            }
+            return sum;
+        }
+    public int sumRange(int i, int j) 
+    {
+         return getSum(j) - getSum(i - 1);
+    }
+
+
+    public static void main(String args[]) 
+    {
+         Scanner scan = new Scanner(System.in);
+          int n = scan.nextInt();
+        int[] nums = new int[n]; 
+        for (int i = 0; i < n; i++) 
+        {
+            nums[i] = scan.nextInt();
+        }
+        NumArray na = new NumArray(nums);
+    // call sumrange(s1,s2)
+         int s1 = scan.nextInt();
+          int s2 = scan.nextInt();
+        System.out.println(na.sumRange(s1, s2));
+
+    }
+}
+ 
+
+//
+            p4
+            
+*/
+import java.util.*;
+
+public class Program4 {
+
+    static class Solution {
+
+        class SegmentTreeNode {
+            int start, end;
+            SegmentTreeNode left, right;
+            int val;
+
+            public SegmentTreeNode(int start, int end) {
+                this.start = start;
+                this.end = end;
+                this.val = start;
+            }
+        }
+
+        SegmentTreeNode root;
+
+        public int maxEvents(int[][] events) {
+
+            if (events == null || events.length == 0)
+                return 0;
+
+            // Sort by end day
+            Arrays.sort(events, (a, b) -> {
+                if (a[1] == b[1])
+                    return a[0] - b[0];
+                return a[1] - b[1];
+            });
+
+            int firstDay = Integer.MAX_VALUE;
+            int lastDay = 0;
+
+            for (int[] e : events) {
+                firstDay = Math.min(firstDay, e[0]);
+                lastDay = Math.max(lastDay, e[1]);
+            }
+
+            root = buildTree(firstDay, lastDay);
+
+            int count = 0;
+
+            for (int[] event : events) {
+                int day = query(root, event[0], event[1]);
+                if (day != Integer.MAX_VALUE) {
+                    count++;
+                    update(root, day);
+                }
+            }
+
+            return count;
+        }
+
+        private SegmentTreeNode buildTree(int start, int end) {
+            if (start > end)
+                return null;
+
+            SegmentTreeNode node = new SegmentTreeNode(start, end);
+
+            if (start != end) {
+                int mid = (start + end) / 2;
+                node.left = buildTree(start, mid);
+                node.right = buildTree(mid + 1, end);
+            }
+
+            return node;
+        }
+
+        private void update(SegmentTreeNode node, int day) {
+            if (node.start == node.end) {
+                node.val = Integer.MAX_VALUE;
+                return;
+            }
+
+            int mid = (node.start + node.end) / 2;
+
+            if (day <= mid)
+                update(node.left, day);
+            else
+                update(node.right, day);
+
+            node.val = Math.min(node.left.val, node.right.val);
+        }
+
+        private int query(SegmentTreeNode node, int left, int right) {
+
+            if (node == null || left > node.end || right < node.start)
+                return Integer.MAX_VALUE;
+
+            if (left <= node.start && node.end <= right)
+                return node.val;
+
+            return Math.min(
+                    query(node.left, left, right),
+                    query(node.right, left, right)
+            );
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner scan = new Scanner(System.in);
+
+        int n = scan.nextInt();
+        scan.nextLine();
+
+        String[] parts = scan.nextLine().split(",");
+
+        int[][] events = new int[n][2];
+
+        for (int i = 0; i < n; i++) {
+            String[] temp = parts[i].trim().split(" ");
+            events[i][0] = Integer.parseInt(temp[0]);
+            events[i][1] = Integer.parseInt(temp[1]);
+        }
+
+        Solution sol = new Solution();
+        System.out.println(sol.maxEvents(events));
+
+        scan.close();
+    }
+}
