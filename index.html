@@ -443,5 +443,12 @@ Do you want to confirm booking in {location} for {nights} nights?  . Add closing
     Click on build After the build is successful -> click on test. Test the chatbot .
             
 
-
+//wek 12
+    Run //  aws s3 ls . This should list your buckets. 
+• Run aws s3 mb s3://your-unique-bucket-name. (Success) 
+    eg:-Run aws s3 ls . This should list your buckets. 
+• Run aws s3 mb s3://iam-user-cc-demo-cli(Success) 
+   //   Run aws iam list-users. 
+o Result: You will get an (AccessDenied) error.  
+This confirms that the CLI is respecting the same IAM policy as the GUI.
 
