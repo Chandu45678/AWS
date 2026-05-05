@@ -363,3 +363,70 @@ public class Program4 {
         scan.close();
     }
 }
+
+
+
+
+
+
+            //7wk
+Click on the "Create function" button.   - Choose "Author from scratch".
+   - Enter a name for your function -> lambda-funciton
+   - Choose Python 3.10 as the runtime.- Under "Permissionscv->  choose use another role that has permissions to access S3 and DynamoDB.
+Select LabRole -> Click on create function button.Go to S3 -> Click on create bucket 
+Enter the name of the bucket –> lambda-cc-lab-bucket
+Keep Every thing as Default -> click on create bucket button.serach dynamodb 
+Click on Create table -> Enter the table – newtable2 
+Partition Key – unique -> Click on create tabel
+//
+            import boto3
+from uuid import uuid4
+
+def lambda_handler(event, context):
+
+    dynamodb = boto3.resource('dynamodb')
+    dynamoTable = dynamodb.Table('newtable2') ////////////here change the table name AS wt u given
+
+    if 'Records' in event:
+        for record in event['Records']:
+
+            bucket_name = record['s3']['bucket']['name']
+            object_key = record['s3']['object']['key']
+            size = record['s3']['object'].get('size', -1)
+            event_name = record['eventName']
+            event_time = record['eventTime']
+
+            dynamoTable.put_item(
+                Item={
+                    'unique': str(uuid4()),
+                    'Bucket': bucket_name,
+                    'Object': object_key,
+                    'Size': size,
+                    'Event': event_name,
+                    'EventTime': event_time
+                }
+            )
+
+    else:
+        print("No S3 event received")
+
+    return {
+        "statusCode": 200,
+        "body": "Data stored in DynamoDB"
+    }
+
+
+Paste the code in Code section (Make sure table names are same and they are present in same region)
+Click on deploy code.
+Test Your Function:
+Select create new event -> select template as S3 put   // in test chnage the bucket name properly else no testeded is done
+Change the bucket in the code .Click on save -> click on test – it will execute the code successfully.Click on Add trigger -> Select source as S3 .
+Bucket should be in same region 
+Select the bucket name -> select  I acknowledge -> click on save button.Upload any document in the bucket -> click on upload..Go to DynamoDb dashboard -> Click on Explore itemsIn lambda dashboard -> Go to Monitor Tab -> click on view cloudWatch logs
+            Select the log stream logs will be appeared.
+
+
+            
+
+
+
