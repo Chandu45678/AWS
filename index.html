@@ -424,8 +424,23 @@ Change the bucket in the code .Click on save -> click on test – it will execut
 Bucket should be in same region 
 Select the bucket name -> select  I acknowledge -> click on save button.Upload any document in the bucket -> click on upload..Go to DynamoDb dashboard -> Click on Explore itemsIn lambda dashboard -> Go to Monitor Tab -> click on view cloudWatch logs
             Select the log stream logs will be appeared.
+//lx
+Enter: Bot name: HotelBookingBot -> Description is optinal IAM role → Create new roleGo to Intents  ->  Name: BookHotel
+Click Create.Add user sentences (how user talks):
+I want to book a hotel ,Book a room ,Reserve hotel , I need a room
+ These are Utterances Click Add slot Fill:  Slot name: age , Slot type: AMAZON.Number , Prompt: Which city do you want?
+Mark as Required -> click on  Add. Click on Age slot.
+Click on Advanced options,Go to slot capture :  success response  -> click on Add conditional branching .Condition: If {age} < 18
+Response: Your not eligible for hoot booking?  -> click on update slot.Add slot for location , Add slot for Checkin , Add slot for Nights
+Click on back to instance list.Click on slot types -> click on Add slot type -> click on Add blank slot type
+    Click on Add values and add “single” ,”double”, “suite” values.Click on bookhotel.•	Go to Slot -> click on add slot
+•	Slot name: RoomType.•	Slot type: RoomType.Click on advance optionsGo to slot prompts -> more prompt options.Click Add -> add card groups.
+    Add title ->  click on buttons.Add titles and values -> update prompts.nitial Response:
+Welcome to Hotel Booking! What is your name?
+Confirmation:
+Do you want to confirm booking in {location} for {nights} nights?  . Add closing response ( optional ) -> click on save intent
 
-
+    Click on build After the build is successful -> click on test. Test the chatbot .
             
 
 
